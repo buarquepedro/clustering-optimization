@@ -1,7 +1,6 @@
 import numpy as np 
 import pandas as pd
 import matplotlib.pyplot as plt
-from math import sqrt
 from cluster import KMeans
 
 def main():
@@ -19,7 +18,7 @@ def main():
 	x[:, 1] = (x[:, 1] - x[:, 1].mean())/x[:, 1].std()
 
 	clf = KMeans.KMeans(n_clusters=3)
-	clf.fit(x, y)
+	clf.fit(x,y)
 	
 	x1_min, x1_max = x[:, 0].min(), x[:, 0].max()
 	x2_min, x2_max = x[:, 1].min(), x[:, 1].max()

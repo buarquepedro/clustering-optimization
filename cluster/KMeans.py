@@ -9,7 +9,7 @@ class KMeans(object):
 		self.shuffle = shuffle
 		self.run = False
 		
- 	def fit(self, x):
+ 	def fit(self, x, y):
  		self.run = True
  		self.centroids = {}
 
