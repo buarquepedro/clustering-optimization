@@ -32,7 +32,7 @@ class MeanShift(object):
 					c1 += (weight * xi)
 					c2 += weight
 
-				new_centroid = np.around(c1/c2, decimals=3)
+				new_centroid = c1/c2
  				cluster_centers.append(tuple(new_centroid))
 
  			is_done = True
@@ -52,8 +52,8 @@ class MeanShift(object):
  			for i in range(len(unique_cluster_centers)):
  				self.centroids[i] = np.array(unique_cluster_centers[i])
 
- 		print self.centroids
-
+ 		return self
+ 		
 	def predict(self, x):
 		if self.run:
 			if len(x.shape) > 1:
