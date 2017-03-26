@@ -44,7 +44,7 @@ class MeanShift(object):
  			if is_done:
  				break
 
- 			# Othe Approach for remove 'duplicates':
+ 			# Other Approach for remove 'duplicates':
  			# result = {}
 			# for row in cluster_centers:
 			#     key = tuple([round(v, 2) for v in row]) 
