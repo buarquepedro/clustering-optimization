@@ -3,8 +3,7 @@ import numpy as np
 
 class MeanShift(object):
 	
-	def __init__(self, radius=None, n_iter=500, tolerance=0.001, step=5):
-		self.step = step
+	def __init__(self, radius=None, n_iter=500, tolerance=0.0001):
 		self.radius = radius
 		self.n_iter = n_iter
 		self.tolerance = tolerance
@@ -15,7 +14,7 @@ class MeanShift(object):
  		self.centroids = {}
 
  		if self.radius is None:
- 			self.radius = np.linalg.norm(np.average(x, axis=0))/self.step
+ 			self.radius = np.linalg.norm(np.average(x, axis=0))
 
  		for i in range(len(x)):
  			self.centroids[i] = x[i]
@@ -29,7 +28,7 @@ class MeanShift(object):
  				c2 = 0
  				for xi in neighbours:
  					dist = np.linalg.norm(xi - self.centroids[i])
- 					weight = self.gaussian_kernel(dist, 10000)
+ 					weight = self.gaussian_kernel(dist)
 					c1 += (weight * xi)
 					c2 += weight
 
@@ -46,10 +45,14 @@ class MeanShift(object):
  				break
 
  			self.centroids = {}
+ 			cluster_centers = self.filter(cluster_centers, self.thresold)
  			cluster_centers = [tuple(l) for l in cluster_centers]
  			unique_cluster_centers = sorted(list(set(cluster_centers)))
+
  			for i in range(len(unique_cluster_centers)):
  				self.centroids[i] = np.array(unique_cluster_centers[i])
+
+ 		print self.centroids
 
 	def predict(self, x):
 		if self.run:
@@ -65,6 +68,16 @@ class MeanShift(object):
 		else:
 			raise Exception("NonTrainedModelException: You must fit data first!")
 
+	def filter(self, x, cond):
+	    out = []
+	    for xi in x:
+	        if all(cond(xi,xii) for xii in out):
+	            out.append(xi)
+	    return out
+
+	def thresold(self, xs, ys):
+		return sum((x-y)*(x-y) for x,y in zip(xs,ys)) > self.tolerance
+
 	def get_neighbours(self, centroid, x, radius):
 		neighbors = []
 		for xi in x:
@@ -72,5 +85,6 @@ class MeanShift(object):
 				neighbors.append(xi)
 		return neighbors		
 
-	def gaussian_kernel(self, dist, bandwidth):
+	def gaussian_kernel(self, dist, bandwidth=1.067):
+		# bandwidth=1.067 is a default thumb-ruled value for gaussian kernel
 		return (1/(bandwidth*math.sqrt(2*math.pi))) * np.exp(-0.5*((dist / bandwidth))**2)
