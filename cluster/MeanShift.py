@@ -44,6 +44,16 @@ class MeanShift(object):
  			if is_done:
  				break
 
+ 			# Othe Approach for remove 'duplicates':
+ 			# result = {}
+			# for row in cluster_centers:
+			#     key = tuple([round(v, 2) for v in row]) 
+			#     if key not in result:
+			#         result[key] = row
+
+			# self.centroids = {}
+			# cluster_centers = result.values()
+
  			self.centroids = {}
  			cluster_centers = self.filter(cluster_centers, self.thresold)
  			cluster_centers = [tuple(l) for l in cluster_centers]
@@ -52,8 +62,9 @@ class MeanShift(object):
  			for i in range(len(unique_cluster_centers)):
  				self.centroids[i] = np.array(unique_cluster_centers[i])
 
+ 		print self.centroids
  		return self
- 		
+
 	def predict(self, x):
 		if self.run:
 			if len(x.shape) > 1:
