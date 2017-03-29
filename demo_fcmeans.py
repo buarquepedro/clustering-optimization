@@ -14,14 +14,12 @@ def main():
 	x = np.array(x)
 	y = np.array(y)
 
-	x[:, 0] = (x[:, 0] - x[:, 0].mean())/x[:, 0].std()
-	x[:, 1] = (x[:, 1] - x[:, 1].mean())/x[:, 1].std()
+	x[:, 0] = (x[:, 0] - x[:, 0].min())/(x[:, 0].max() - x[:, 0].min())
+	x[:, 1] = (x[:, 1] - x[:, 1].min())/(x[:, 1].max() - x[:, 1].min())
 
-	clf = FCMeans.FCMeans(n_clusters=2)
-	clf.fit(x,y)
-
-	print clf.centroids
-	
+	clf = FCMeans.FCMeans(n_clusters=3)
+	clf.fit(x)
+		
 	colors = ['g', 'm', 'y']
 	for idx in range(len(np.unique(y))):
 		plt.scatter(x[:, 0][y == idx], x[:, 1][y == idx], c=colors[idx], s=10, edgecolors='k')

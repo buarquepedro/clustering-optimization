@@ -15,6 +15,9 @@ def main():
 	x = np.array(x)
 	y = np.array(y)
 
+	x[:, 0] = (x[:, 0] - x[:, 0].min())/(x[:, 0].max() - x[:, 0].min())
+	x[:, 1] = (x[:, 1] - x[:, 1].min())/(x[:, 1].max() - x[:, 1].min())
+
 	clf = MeanShift.MeanShift()
 	clf.fit(x)
 	

@@ -9,12 +9,15 @@ class KMeans(object):
 		self.shuffle = shuffle
 		self.run = False
 		
- 	def fit(self, x, y):
+ 	def fit(self, x):
  		self.run = True
  		self.centroids = {}
 
+ 		if len(x.shape) < 1:
+ 			raise Exception("DataException: Dataset must contain more examples" + 
+ 							"than the required number of clusters!")
  		if self.shuffle:
- 			r = np.random.permutation(len(y))
+ 			r = np.random.permutation(x.shape[0])
  			for k in range(len(r[:self.n_clusters])):
  				self.centroids[k] = x[r[k]]
  		else:

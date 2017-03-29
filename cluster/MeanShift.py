@@ -13,6 +13,9 @@ class MeanShift(object):
  		self.run = True
  		self.centroids = {}
 
+ 		if len(x.shape) < 1:
+ 			raise Exception("DataException: Dataset must contain more examples" + 
+ 							"than the required number of clusters!")
  		if self.radius is None:
  			self.radius = np.linalg.norm(np.average(x, axis=0))
 
@@ -43,16 +46,6 @@ class MeanShift(object):
 
  			if is_done:
  				break
-
- 			# Other Approach for remove 'duplicates':
- 			# result = {}
-			# for row in cluster_centers:
-			#     key = tuple([round(v, 2) for v in row]) 
-			#     if key not in result:
-			#         result[key] = row
-
-			# self.centroids = {}
-			# cluster_centers = result.values()
 
  			self.centroids = {}
  			cluster_centers = self.filter(cluster_centers, self.thresold)
