@@ -3,7 +3,7 @@ import numpy as np
 
 class MeanShift(object):
 	
-	def __init__(self, radius=None, n_iter=500, tolerance=0.0001):
+	def __init__(self, radius=None, n_iter=300, tolerance=0.001):
 		self.radius = radius
 		self.n_iter = n_iter
 		self.tolerance = tolerance
@@ -54,8 +54,6 @@ class MeanShift(object):
 
  			for i in range(len(unique_cluster_centers)):
  				self.centroids[i] = np.array(unique_cluster_centers[i])
-
- 		print self.centroids
  		return self
 
 	def predict(self, x):
