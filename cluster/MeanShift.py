@@ -65,14 +65,14 @@ class MeanShift(object):
 	    return out
 
 	def thresold(self, xs, ys):
-		return sum((x-y)*(x-y) for x,y in zip(xs,ys)) > 2.5e-05
+		return sum((x-y)*(x-y) for x,y in zip(xs,ys)) > self.tolerance
 
 	def shift(self, xi, points):
 		c1 = 0
  		c2 = 0
  		for x in points:
  			dist = np.linalg.norm(xi - x)
- 			weight = self.gaussian_kernel(dist, 0.1)
+ 			weight = self.gaussian_kernel(dist)
 			c1 += (weight * xi)
 			c2 += weight
 		return c1/c2
