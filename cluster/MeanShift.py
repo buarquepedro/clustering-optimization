@@ -3,57 +3,44 @@ import numpy as np
 
 class MeanShift(object):
 	
-	def __init__(self, radius=None, n_iter=300, tolerance=0.001):
+	def __init__(self, radius=None, n_iter=500, shuffle=True, tolerance=0.001):
 		self.radius = radius
 		self.n_iter = n_iter
 		self.tolerance = tolerance
+		self.shuffle = shuffle
 		self.run = False
 
  	def fit(self, x):
  		self.run = True
- 		self.centroids = {}
-
  		if len(x.shape) < 1:
  			raise Exception("DataException: Dataset must contain more examples" + 
  							"than the required number of clusters!")
- 		if self.radius is None:
- 			self.radius = np.linalg.norm(np.average(x, axis=0))
 
- 		for i in range(len(x)):
- 			self.centroids[i] = x[i]
+ 		self.points = np.copy(x)
+ 		shifted_points = np.zeros(self.points.shape)
 
  		for idx in range(self.n_iter):
- 			cluster_centers = []
- 			for i in self.centroids:
- 				neighbours = self.get_neighbours(self.centroids[i], x, self.radius)
+ 			max_dist = 0
+ 			for idx, xi in self.points:
+ 				shifted_points[int(idx)] = self.shift(xi, self.points)
+ 				if (np.linalg.norm(xi - shifted_points[int(idx)]) > max_dist):
+ 					max_dist = np.linalg.norm(xi - shifted_points[int(idx)])
+ 				
+			self.points = np.copy(shifted_points)
+			shifted_points = np.zeros(self.points.shape)
 
- 				c1 = 0
- 				c2 = 0
- 				for xi in neighbours:
- 					dist = np.linalg.norm(xi - self.centroids[i])
- 					weight = self.gaussian_kernel(dist)
-					c1 += (weight * xi)
-					c2 += weight
+ 			if max_dist < self.tolerance:
+				break
 
-				new_centroid = c1/c2
- 				cluster_centers.append(tuple(new_centroid))
+		self.centroids = {}
+		cluster_centers = self.filter(self.points, self.thresold)
+ 		cluster_centers = [tuple(l) for l in cluster_centers]
+ 		unique_cluster_centers = sorted(list(set(cluster_centers)))
 
- 			is_done = True
- 			for i in self.centroids:
- 				if np.linalg.norm(self.centroids[i] - cluster_centers[i]) > self.tolerance:
- 					is_done = False
- 					break
+ 		for i in range(len(unique_cluster_centers)):
+ 			self.centroids[i] = np.array(unique_cluster_centers[i])
 
- 			if is_done:
- 				break
-
- 			self.centroids = {}
- 			cluster_centers = self.filter(cluster_centers, self.thresold)
- 			cluster_centers = [tuple(l) for l in cluster_centers]
- 			unique_cluster_centers = sorted(list(set(cluster_centers)))
-
- 			for i in range(len(unique_cluster_centers)):
- 				self.centroids[i] = np.array(unique_cluster_centers[i])
+ 		print self.centroids
  		return self
 
 	def predict(self, x):
@@ -78,14 +65,17 @@ class MeanShift(object):
 	    return out
 
 	def thresold(self, xs, ys):
-		return sum((x-y)*(x-y) for x,y in zip(xs,ys)) > self.tolerance
+		return sum((x-y)*(x-y) for x,y in zip(xs,ys)) > 2.5e-05
 
-	def get_neighbours(self, centroid, x, radius):
-		neighbors = []
-		for xi in x:
-			if np.linalg.norm(xi - centroid) <= radius:
-				neighbors.append(xi)
-		return neighbors		
+	def shift(self, xi, points):
+		c1 = 0
+ 		c2 = 0
+ 		for x in points:
+ 			dist = np.linalg.norm(xi - x)
+ 			weight = self.gaussian_kernel(dist, 0.1)
+			c1 += (weight * xi)
+			c2 += weight
+		return c1/c2
 
 	def gaussian_kernel(self, dist, bandwidth=1.067):
 		# bandwidth=1.067 is a default thumb-ruled value for gaussian kernel
