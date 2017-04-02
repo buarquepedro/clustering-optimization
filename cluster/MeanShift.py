@@ -7,7 +7,6 @@ class MeanShift(object):
 		self.radius = radius
 		self.n_iter = n_iter
 		self.tolerance = tolerance
-		self.shuffle = shuffle
 		self.run = False
 
  	def fit(self, x):
@@ -39,8 +38,6 @@ class MeanShift(object):
 
  		for i in range(len(unique_cluster_centers)):
  			self.centroids[i] = np.array(unique_cluster_centers[i])
-
- 		print self.centroids
  		return self
 
 	def predict(self, x):
