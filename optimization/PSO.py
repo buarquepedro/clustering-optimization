@@ -1,4 +1,3 @@
-import math
 import numpy as np 
 
 class Particle(object):
@@ -42,16 +41,7 @@ class PSO(object):
  			self.swarm.append(particle)
 
  	def evaluate(self, x, func_type):
- 		if func_type == 'sphere':
- 			return np.sum(x ** 2)
- 		elif func_type == 'rosenbrock':
- 			sum_ = 0.0
- 			for i in range(1, len(x)-1):
- 				sum_ += 100 * (x[i+1] - x[i]**2 )** 2 + (x[i] - 1)**2
- 			return sum_
- 		elif func_type == 'rastrigin':
- 			f_x = [xi**2 - 10*math.cos(2*math.pi*xi) + 10 for xi in x]
- 			return sum(f_x)
+ 		return func_type(x)
 
 	def optimize(self, func_type):
 		self.init_swarm(func_type)
