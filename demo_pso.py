@@ -3,23 +3,33 @@ import matplotlib.pyplot as plt
 from optimization import PSO
 
 def main():
-	opt1 = PSO.PSO(dim=30, minf=-5.12, maxf=5.12, swarm_size=30, n_iter=10000, w=0.8, lb_w=0.4, w_damp=0.99, c1=2.05, c2=2.05)
+	opt1 = PSO.PSO(dim=30, minf=-100, maxf=100, swarm_size=30, n_iter=5000, w=0.8, lb_w=0.4, w_damp=0.99, c1=2.05, c2=2.05)
 	opt1.optimize('sphere')
 
-	opt2 = PSO.PSO(dim=30, minf=-30, maxf=30, swarm_size=30, n_iter=10000, w=0.8, lb_w=0.4, w_damp=0.99, c1=2.05, c2=2.05)
+	opt2 = PSO.PSO(dim=30, minf=-30, maxf=30, swarm_size=30, n_iter=5000, w=0.8, lb_w=0.4, w_damp=0.99, c1=2.05, c2=2.05)
 	opt2.optimize('rosenbrock')
 
-	plt.subplot(121)
+	opt3 = PSO.PSO(dim=30, minf=-5.12, maxf=5.12, swarm_size=30, n_iter=5000, w=0.8, lb_w=0.4, w_damp=0.99, c1=2.05, c2=2.05)
+	opt3.optimize('rastrigin')
+
+	plt.subplot(131)
 	plt.plot([(i+1) for i in range(len(opt1.best_cost))], opt1.best_cost, c='b')
-	plt.title('Particle Swarm Optimization')
+	plt.title('PSO - Sphere Function')
 	plt.legend(["Sphere"])
 	plt.xlabel('Iterations')
 	plt.ylabel('Fitness')
 
-	plt.subplot(122)
+	plt.subplot(132)
 	plt.plot([(i+1) for i in range(len(opt2.best_cost))], opt2.best_cost, c='r')
-	plt.title('Particle Swarm Optimization')
+	plt.title('PSO - Rosenbrock Function')
 	plt.legend(["Rosenbrock"])
+	plt.xlabel('Iterations')
+	plt.ylabel('Fitness')
+
+	plt.subplot(133)
+	plt.plot([(i+1) for i in range(len(opt3.best_cost))], opt3.best_cost, c='g')
+	plt.title('PSO - Rastrigin Function')
+	plt.legend(["Rastrigin"])
 	plt.xlabel('Iterations')
 	plt.ylabel('Fitness')
 	plt.show()

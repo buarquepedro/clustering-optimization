@@ -1,3 +1,4 @@
+import math
 import numpy as np 
 
 class Particle(object):
@@ -5,9 +6,9 @@ class Particle(object):
 	def __init__(self, dim):
 		self.pos = np.random.random(dim)
 		self.speed = [0.0 for _ in range(dim)]
-		self.best_pos = np.random.random(dim)
+		self.best_pos = self.pos
 		self.cost = 0.0
-		self.best_cost = 0.0
+		self.best_cost = self.cost
  
 class PSO(object):
 	
@@ -48,27 +49,33 @@ class PSO(object):
  			for i in range(1, len(x)-1):
  				sum_ += 100 * (x[i+1] - x[i]**2 )** 2 + (x[i] - 1)**2
  			return sum_
+ 		elif func_type == 'rastrigin':
+ 			f_x = [xi**2 - 10*math.cos(2*math.pi*xi) + 10 for xi in x]
+ 			return sum(f_x)
 
 	def optimize(self, func_type):
 		self.init_swarm(func_type)
-		self.best_cost = [0.0 for _ in range(self.n_iter)]
+		self.best_cost = []
 
 		for i in range(self.n_iter):
+			self.best_cost.append(self.global_optimum.cost)
+
 			for p in self.swarm:
 				r1 = np.random.random(len(p.speed))
 				r2 = np.random.random(len(p.speed))
-				p.speed = self.w*np.array(p.speed) + self.c1*r1*(p.best_pos - p.pos) + self.c1*r1*(self.global_optimum.pos - p.pos)
+				p.speed = self.w*np.array(p.speed) + self.c1*r1*(p.best_pos - p.pos) + self.c1*r2*(self.global_optimum.pos - p.pos)
 				p.pos = p.pos + p.speed
 				p.cost = self.evaluate(p.pos, func_type)
 
 				if p.cost < p.best_cost:
 					p.best_cost = p.cost
 					p.best_pos = p.pos
-					if p.best_cost < self.global_optimum.cost:
-						self.global_optimum.pos = p.best_pos
- 						self.global_optimum.cost = p.best_cost
 
- 				if (self.w > self.lb_w):
- 					self.w = self.w * self.w_damp
- 			self.best_cost.append(self.global_optimum.cost)
+			for p in self.swarm:
+				if p.best_cost < self.global_optimum.cost:
+					self.global_optimum.pos = p.best_pos
+ 					self.global_optimum.cost = p.best_cost
+					
+ 			if (self.w > self.lb_w):
+ 				self.w = self.w * self.w_damp
 	
