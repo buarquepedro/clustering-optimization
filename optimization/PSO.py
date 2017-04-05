@@ -58,7 +58,12 @@ class PSO(object):
 				r2 = np.random.random(len(p.speed))
 				p.speed = self.w*np.array(p.speed) + self.c1*r1*(p.best_pos - p.pos) + self.c1*r2*(self.global_optimum.pos - p.pos)
 
+				if np.linalg.norm(p.speed) > self.v_max:
+					p.speed = self.v_max * p.speed/np.linalg.norm(p.speed)
+
 				p.pos = p.pos + p.speed
+				p.pos[p.pos > self.maxf] = self.maxf
+				p.pos[p.pos < self.minf] = self.minf
 				p.cost = self.evaluate(p.pos, func_type)
 
 				if p.cost < p.best_cost:

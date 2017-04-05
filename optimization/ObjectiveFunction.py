@@ -31,7 +31,7 @@ class ObjectiveFunction(object):
 
     @staticmethod
     def generalized_schwefel_function(x):
-    	f_x = [xi*np.sin(np.sqr(xi)) for xi in x]
+    	f_x = [xi*np.sin(np.sqrt(np.absolute(xi))) for xi in x]
     	return -sum(f_x)
 
     @staticmethod
@@ -39,7 +39,7 @@ class ObjectiveFunction(object):
     	fi = (1.0/4000)*np.sum(x ** 2)
     	fii = 1.0
     	for i in range(len(x)):
-    		fii *= np.cos(x[i]/np.sqrt(i))
+    		fii *= np.cos(x[i]/np.sqrt(i+1))
     	return fi + fii + 1
 
     @staticmethod
