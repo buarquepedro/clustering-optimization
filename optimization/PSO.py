@@ -25,7 +25,7 @@ class PSO(object):
  		self.global_optimum = np.inf
 
  		if v_max is None:
- 			self.v_max = np.absolute(maxf - minf)
+ 			self.v_max = 0.5*np.absolute(maxf - minf)
 
  	def init_swarm(self, func_type):
  		self.swarm = []
