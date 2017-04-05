@@ -11,7 +11,7 @@ class Particle(object):
  
 class PSO(object):
 	
-	def __init__(self, dim, minf, maxf, swarm_size=100, n_iter=500, w=1, lb_w=0.2, w_damp=0.99, c1=2, c2=2):
+	def __init__(self, dim, minf, maxf, swarm_size=100, n_iter=500, w=1, lb_w=0.2, w_damp=0.99, c1=2, c2=2, v_max=None):
  		self.dim = dim
  		self. minf = minf
  		self.maxf = maxf
@@ -23,6 +23,9 @@ class PSO(object):
  		self.c1 = c1
  		self.c2 = c2
  		self.global_optimum = np.inf
+
+ 		if v_max is None:
+ 			self.v_max = np.absolute(maxf - minf)
 
  	def init_swarm(self, func_type):
  		self.swarm = []
@@ -54,6 +57,7 @@ class PSO(object):
 				r1 = np.random.random(len(p.speed))
 				r2 = np.random.random(len(p.speed))
 				p.speed = self.w*np.array(p.speed) + self.c1*r1*(p.best_pos - p.pos) + self.c1*r2*(self.global_optimum.pos - p.pos)
+
 				p.pos = p.pos + p.speed
 				p.cost = self.evaluate(p.pos, func_type)
 
