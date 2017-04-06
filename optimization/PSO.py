@@ -69,10 +69,12 @@ class PSO(object):
                     p.speed = self.v_max * p.speed/np.linalg.norm(p.speed)
 
                 p.pos = p.pos + p.speed
-                p.pos[p.pos > self.maxf] = self.maxf
-                p.pos[p.pos < self.minf] = self.minf
-                p.cost = self.evaluate(p.pos, func_type)
+                if (self.minf in p.pos) or (self.maxf in p.pos):
+                	p.pos[p.pos > self.maxf] = self.maxf
+                	p.pos[p.pos < self.minf] = self.minf
+                	p.speed = -1*p.speed
 
+                p.cost = self.evaluate(p.pos, func_type)
                 if p.cost < p.best_cost:
                     p.best_cost = p.cost
                     p.best_pos = p.pos
