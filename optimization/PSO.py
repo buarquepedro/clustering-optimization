@@ -69,7 +69,7 @@ class PSO(object):
                     p.speed = self.v_max * p.speed/np.linalg.norm(p.speed)
 
                 p.pos = p.pos + p.speed
-                if (self.minf in p.pos) or (self.maxf in p.pos):
+                if (p.pos < self.minf).any() or (p.pos > self.maxf).any():
                 	p.pos[p.pos > self.maxf] = self.maxf
                 	p.pos[p.pos < self.minf] = self.minf
                 	p.speed = -1*p.speed
