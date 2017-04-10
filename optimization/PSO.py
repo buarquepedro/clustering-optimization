@@ -19,7 +19,7 @@ class PSO(object):
         self.n_iter = n_iter
         self.w = w
         self.lb_w = lb_w
-        self.w_damp = w_damp
+        self.w_damp = self.w - self.lb_w
         self.c1 = c1
         self.c2 = c2
         self.global_optimum = np.inf
@@ -85,4 +85,4 @@ class PSO(object):
                     self.global_optimum.cost = p.best_cost
                     
             if (self.w > self.lb_w):
-                self.w = self.w * self.w_damp
+                self.w = (i/self.n_iter)*self.w_damp
