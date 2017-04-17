@@ -11,7 +11,7 @@ class Particle(object):
  
 class PSO(object):
         
-    def __init__(self, dim, minf, maxf, min_init, max_init, swarm_size=100, n_iter=500, w=1, lb_w=0.2, w_damp=0.99, c1=2, c2=2, v_max=None):
+    def __init__(self, dim, minf, maxf, min_init=None, max_init=None, swarm_size=100, n_iter=500, w=1, lb_w=0.2, w_damp=0.99, c1=2, c2=2, v_max=None):
         self.dim = dim
         self. minf = minf
         self.maxf = maxf
