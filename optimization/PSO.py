@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class Particle(object):
     def __init__(self, dim):
         self.pos = np.random.random(dim)
@@ -8,7 +7,6 @@ class Particle(object):
         self.best_pos = self.pos
         self.cost = 0.0
         self.best_cost = self.cost
-
 
 class PSO(object):
     def __init__(self, dim, minf, maxf, min_init=None, max_init=None, swarm_size=100, n_iter=500, w=1, lb_w=0.2,

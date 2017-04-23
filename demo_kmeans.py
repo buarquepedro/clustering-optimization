@@ -38,6 +38,7 @@ def main():
 
 	for k in clf.centroids:
 		plt.scatter(clf.centroids[k][0], clf.centroids[k][1], marker='x', s=100, c='b')
+		print clf.centroids[k]
 
 	plt.title('K-Means')
 	plt.xlabel('sepal length [standardized]')
