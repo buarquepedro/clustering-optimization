@@ -17,7 +17,7 @@ def main():
     x[:, 0] = (x[:, 0] - x[:, 0].min()) / (x[:, 0].max() - x[:, 0].min())
     x[:, 1] = (x[:, 1] - x[:, 1].min()) / (x[:, 1].max() - x[:, 1].min())
 
-    clf = CPSO(n_clusters=3, swarm_size=15, n_iter=300, w=0.72, lb_w=0.4, w_damp=None, c1=1.49, c2=1.49)
+    clf = CPSO(n_clusters=3, swarm_size=15, n_iter=50, w=0.72, lb_w=0.4, w_damp=None, c1=1.49, c2=1.49)
     clf.fit(x)
     clf.display_centroids()
 
