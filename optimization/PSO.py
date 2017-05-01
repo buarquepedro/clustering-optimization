@@ -23,11 +23,13 @@ class PSO(object):
         self.c1 = c1
         self.c2 = c2
         self.global_optimum = np.inf
+        self.w_damp = w_damp
+        self.v_max = v_max
 
-        if w_damp is None:
+        if self.w_damp is None:
             self.w_damp = self.w - self.lb_w
 
-        if v_max is None:
+        if self.v_max is None:
             self.v_max = 0.5 * np.absolute(maxf - minf)
 
     def init_swarm(self, func_type):
@@ -75,12 +77,12 @@ class PSO(object):
                     p.speed = -1 * p.speed
 
                 p.cost = self.evaluate(p.pos, func_type)
-                if p.cost < p.best_cost:
+                if p.cost <= p.best_cost:
                     p.best_cost = p.cost
                     p.best_pos = p.pos
 
             for p in self.swarm:
-                if p.best_cost < self.global_optimum.cost:
+                if p.best_cost <= self.global_optimum.cost:
                     self.global_optimum.pos = p.best_pos
                     self.global_optimum.cost = p.best_cost
 

@@ -43,31 +43,23 @@ class PSO(object):
             if len(self.candidates) > 0:
                 particle = Particle(self.dim)
                 particle.pos = self.candidates.pop()
-                print 'Inserted Candidate:' + str(particle.pos)
             else:
                 particle = Particle(self.dim)
                 if (self.min_init is not None) and (self.max_init is not None):
                     particle.pos = np.random.uniform(self.min_init, self.max_init, self.dim)
                 else:
                     particle.pos = np.random.uniform(self.minf, self.maxf, self.dim)
-                print 'Random Candidate:' + str(particle.pos)
 
             if not customizable:
                 particle.cost = self.__evaluate(particle.pos, func_type)
             else:
                 particle.cost = self.__evaluate(particle.pos, func_type, customizable, **kwargs)
             particle.best_pos = particle.pos
-            print 'Best Pos: ' + str(particle.best_pos)
             particle.best_cost = particle.cost
-            print 'Cost: ' + str(particle.cost)
-            print 'Best Pos: ' + str(particle.best_cost)
-            print '--------------------------------------------------------------------------------------------'
 
             if particle.best_cost < self.global_optimum.cost:
                 self.global_optimum.cost = particle.best_cost
             self.swarm.append(particle)
-        print self.swarm_size
-        print len(self.swarm)
 
     def __evaluate(self, x, func_type, customizable=False, **kwargs):
         if not customizable:
@@ -105,12 +97,12 @@ class PSO(object):
                     p.cost = self.__evaluate(p.pos, func_type)
                 else:
                     p.cost = self.__evaluate(p.pos, func_type, customizable, **kwargs)
-                if p.cost < p.best_cost:
+                if p.cost <= p.best_cost:
                     p.best_cost = p.cost
                     p.best_pos = p.pos
 
             for p in self.swarm:
-                if p.best_cost < self.global_optimum.cost:
+                if p.best_cost <= self.global_optimum.cost:
                     self.global_optimum.pos = p.best_pos
                     self.global_optimum.cost = p.best_cost
 
