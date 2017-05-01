@@ -53,8 +53,13 @@ class CPSO(object):
             self.max_f = data.ravel().max()
             self.v_max = 0.5 * np.absolute(self.max_f - self.min_f)
 
+        self.best_cost = []
         for i in range(self.n_iter):
+            self.best_cost.append(self.global_optimum.best_cost*10)
             for p in self.swarm:
+                for c in p.centroids:
+                    p.centroids[c].cluster = []
+
                 for point in data:
                     dist_ = []
                     for c in p.centroids:
@@ -69,10 +74,6 @@ class CPSO(object):
                     p.best_cost = p.cost
                     for c in p.centroids:
                         p.centroids[c].best_pos = p.centroids[c].pos
-
-            for p in self.swarm:
-                if p.best_cost < self.global_optimum.best_cost:
-                    self.global_optimum = copy.deepcopy(p)
 
             for p in self.swarm:
                 for c in p.centroids:
@@ -90,6 +91,11 @@ class CPSO(object):
                         p.centroids[c].pos[p.centroids[c].pos > self.max_f] = self.max_f
                         p.centroids[c].pos[p.centroids[c].pos < self.min_f] = self.min_f
                         p.centroids[c].speed = -1 * p.centroids[c].speed
+
+            for p in self.swarm:
+                if p.best_cost < self.global_optimum.best_cost:
+                    p.display_particle()
+                    self.global_optimum = copy.deepcopy(p)
 
             if (self.w > self.lb_w):
                 self.w = (i / self.n_iter) * self.w_damp
