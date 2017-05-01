@@ -23,6 +23,7 @@ class PSO(object):
         self.c1 = c1
         self.c2 = c2
         self.global_optimum = np.inf
+        self.candidates = []
 
         if w_damp is None:
             self.w_damp = self.w - self.lb_w
@@ -30,28 +31,43 @@ class PSO(object):
         if v_max is None:
             self.v_max = 0.5 * np.absolute(maxf - minf)
 
+    def set_candidate(self, particle):
+        self.candidates.append(particle)
+
     def __init_swarm(self, func_type, customizable=False, **kwargs):
         self.swarm = []
         self.global_optimum = Particle(self.dim)
         self.global_optimum.cost = np.inf
 
         for i in range(self.swarm_size):
-            particle = Particle(self.dim)
-            if (self.min_init is not None) and (self.max_init is not None):
-                particle.pos = np.random.uniform(self.min_init, self.max_init, self.dim)
+            if len(self.candidates) > 0:
+                particle = Particle(self.dim)
+                particle.pos = self.candidates.pop()
+                print 'Inserted Candidate:' + str(particle.pos)
             else:
-                particle.pos = np.random.uniform(self.minf, self.maxf, self.dim)
+                particle = Particle(self.dim)
+                if (self.min_init is not None) and (self.max_init is not None):
+                    particle.pos = np.random.uniform(self.min_init, self.max_init, self.dim)
+                else:
+                    particle.pos = np.random.uniform(self.minf, self.maxf, self.dim)
+                print 'Random Candidate:' + str(particle.pos)
 
             if not customizable:
                 particle.cost = self.__evaluate(particle.pos, func_type)
             else:
                 particle.cost = self.__evaluate(particle.pos, func_type, customizable, **kwargs)
             particle.best_pos = particle.pos
+            print 'Best Pos: ' + str(particle.best_pos)
             particle.best_cost = particle.cost
+            print 'Cost: ' + str(particle.cost)
+            print 'Best Pos: ' + str(particle.best_cost)
+            print '--------------------------------------------------------------------------------------------'
 
             if particle.best_cost < self.global_optimum.cost:
                 self.global_optimum.cost = particle.best_cost
             self.swarm.append(particle)
+        print self.swarm_size
+        print len(self.swarm)
 
     def __evaluate(self, x, func_type, customizable=False, **kwargs):
         if not customizable:

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from cluster.PSC import PSC
+from cluster.KPSO import KPSO
 
 def main():
     df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data', header=None)
@@ -17,7 +17,7 @@ def main():
     x[:, 0] = (x[:, 0] - x[:, 0].min()) / (x[:, 0].max() - x[:, 0].min())
     x[:, 1] = (x[:, 1] - x[:, 1].min()) / (x[:, 1].max() - x[:, 1].min())
 
-    clf = PSC(n_clusters=3, swarm_size=15, n_iter=100, w=0.72, lb_w=0.4, w_damp=None, c1=1.49, c2=1.49)
+    clf = KPSO(n_clusters=3, swarm_size=15, n_iter=100, w=0.72, lb_w=0.4, w_damp=None, c1=1.49, c2=1.49)
     clf.fit(x)
 
     plt.subplot(121)
@@ -28,7 +28,7 @@ def main():
     for k in clf.centroids:
         plt.scatter(clf.centroids[k][0], clf.centroids[k][1], marker='x', s=100, c='b')
 
-    plt.title('PSC')
+    plt.title('KPSO')
     plt.xlabel('sepal length [standardized]')
     plt.ylabel('petal length [standardized]')
 
